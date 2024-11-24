@@ -1,4 +1,7 @@
-import firebase from 'firebase';
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBGBsTfdwYX0nikDvWcyXQQTmYTSE1ey4o',
@@ -11,8 +14,8 @@ const firebaseConfig = {
   measurementId: 'G-6HQD5YG0CJ',
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+const app = initializeApp(firebaseConfig);
 
-export default firebase;
+export const db = getFirestore(app);
+export const storage = getStorage(app);
+export const realtimeDb = getDatabase(app);

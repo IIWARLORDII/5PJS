@@ -1,9 +1,10 @@
-// screens/NovaColetaScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Image, Alert } from 'react-native';
+import { View, Text, TextInput, Button, Image, Alert, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { db, storage } from '../firebaseConfig';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import axios from 'axios';
+import { realtimeDb } from '../firebaseConfig';
+import { ref, set, get } from 'firebase/database';
+import { CLOUDINARY_URL, CLOUDINARY_UPLOAD_PRESET } from '@env';
 
 export default function NovaColetaScreen({ navigation }) {
   const [image, setImage] = useState(null);
@@ -12,6 +13,8 @@ export default function NovaColetaScreen({ navigation }) {
   const [nome, setNome] = useState('');
   const [idade, setIdade] = useState('');
   const [historico, setHistorico] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState('');
 
   // Função para escolher imagem
   const pickImage = async () => {
@@ -23,7 +26,43 @@ export default function NovaColetaScreen({ navigation }) {
     });
 
     if (!result.canceled) {
-      setImage(result.uri);
+      setImage(result.assets[0].uri);
+    }
+  };
+
+  // Função para fazer upload da imagem para o Cloudinary
+  const uploadImageToCloudinary = async (imageUri) => {
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', {
+        uri: imageUri,
+        type: 'image/jpeg',
+        name: 'upload.jpg',
+      });
+      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+      console.log("Dados enviados para o Cloudinary:", formData);
+
+      const response = await axios.post(CLOUDINARY_URL, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      console.log("Resposta do Cloudinary:", response.data);
+
+      if (response.status === 200) {
+        return response.data.secure_url;
+      } else {
+        console.error("Erro ao fazer upload da imagem para o Cloudinary:", response.data);
+        throw new Error("Erro ao fazer upload da imagem para o Cloudinary");
+      }
+    } catch (error) {
+      console.error("Erro ao fazer upload da imagem para o Cloudinary:", error);
+      throw error;
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -35,20 +74,18 @@ export default function NovaColetaScreen({ navigation }) {
     }
 
     try {
-      const coletaRef = db.collection('coletas').doc();
-      const coletaID = coletaRef.id;
+      // Upload da imagem para o Cloudinary
+      const photoURL = await uploadImageToCloudinary(image);
+      console.log("URL da imagem:", photoURL);
 
-      // Upload da imagem
-      const imageRef = ref(storage, `coletas/${coletaID}`);
-      const response = await fetch(image);
-      const blob = await response.blob();
-      await uploadBytes(imageRef, blob);
+      // Gerar ID incremental para a nova coleta
+      const coletasRef = ref(realtimeDb, 'coletas');
+      const coletasSnapshot = await get(coletasRef);
+      const newColetaID = coletasSnapshot.exists() ? Object.keys(coletasSnapshot.val()).length + 1 : 1;
+      const coletaID = String(newColetaID).padStart(3, '0');
 
-      // URL da imagem
-      const photoURL = await getDownloadURL(imageRef);
-
-      // Salvar coleta no Firestore
-      await coletaRef.set({
+      // Salvar coleta no Realtime Database
+      await set(ref(realtimeDb, `coletas/${coletaID}`), {
         n: coletaID,
         nome,
         idade,
@@ -64,7 +101,7 @@ export default function NovaColetaScreen({ navigation }) {
       navigation.navigate('Coletas');
     } catch (error) {
       console.error("Erro ao salvar coleta:", error);
-      Alert.alert("Erro", "Ocorreu um erro ao registrar a coleta.");
+      setError(`Erro ao registrar a coleta: ${error.message}`);
     }
   };
 
@@ -74,6 +111,7 @@ export default function NovaColetaScreen({ navigation }) {
       
       {/* Botão para escolher imagem */}
       <Button title="Escolher Imagem" onPress={pickImage} />
+      {uploading && <Text>Fazendo upload...</Text>}
       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, marginVertical: 10 }} />}
       
       {/* Campos de entrada */}
@@ -111,6 +149,16 @@ export default function NovaColetaScreen({ navigation }) {
 
       {/* Botão de Enviar */}
       <Button title="Registrar Coleta" onPress={handleSubmit} color="#4CAF50" />
+
+      {/* Exibir mensagem de erro, se houver */}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  errorText: {
+    color: 'red',
+    marginTop: 10,
+  },
+});
