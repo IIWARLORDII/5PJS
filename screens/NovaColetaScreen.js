@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
-// import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ScrollView } from 'react-native';
 import { realtimeDb } from '../firebaseConfig';
 import { ref, set, get } from 'firebase/database';
+// import * as ImagePicker from 'expo-image-picker';
+// import axios from 'axios';
 // import { CLOUDINARY_URL, CLOUDINARY_UPLOAD_PRESET } from '@env';
 
 export default function NovaColetaScreen({ navigation }) {
@@ -84,7 +84,7 @@ export default function NovaColetaScreen({ navigation }) {
       // Salvar coleta no Realtime Database
       await set(ref(realtimeDb, `coletas/${coletaID}`), {
         n: coletaID,
-        coleta: coletaID, // Adicionar a chave "coleta" como string
+        coleta: coletaID,
         nome,
         idade,
         historico,
@@ -92,7 +92,7 @@ export default function NovaColetaScreen({ navigation }) {
         tipoAnalise: tipo,
         foto: imageLink,
         diagnostico: "Negativo",
-        analisado: 0
+        analisado: 0,
       });
 
       // Redirecionar para a tela de coletas
@@ -107,62 +107,95 @@ export default function NovaColetaScreen({ navigation }) {
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 18, marginBottom: 10 }}>Nova Coleta</Text>
-      
-      {/* Campo para link da imagem */}
-      <TextInput 
-        placeholder="Link da Imagem" 
-        value={imageLink} 
-        onChangeText={setImageLink} 
-        style={{ borderWidth: 1, padding: 8, marginVertical: 5 }}
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Nova Coleta</Text>
+
+      <TextInput
+        placeholder="Link da Imagem"
+        value={imageLink}
+        onChangeText={setImageLink}
+        style={styles.input}
       />
-      
-      {/* Campos de entrada */}
-      <TextInput 
-        placeholder="Detalhes da Amostra" 
-        value={detalhes} 
-        onChangeText={setDetalhes} 
-        style={{ borderWidth: 1, padding: 8, marginVertical: 5 }}
+      <TextInput
+        placeholder="Detalhes da Amostra"
+        value={detalhes}
+        onChangeText={setDetalhes}
+        style={styles.input}
       />
-      <TextInput 
-        placeholder="Tipo de Análise (Ex: Gota Espessa)" 
-        value={tipo} 
-        onChangeText={setTipo} 
-        style={{ borderWidth: 1, padding: 8, marginVertical: 5 }}
+      <TextInput
+        placeholder="Tipo de Análise (Ex: Gota Espessa)"
+        value={tipo}
+        onChangeText={setTipo}
+        style={styles.input}
       />
-      <TextInput 
-        placeholder="Nome Completo do Paciente" 
-        value={nome} 
-        onChangeText={setNome} 
-        style={{ borderWidth: 1, padding: 8, marginVertical: 5 }}
+      <TextInput
+        placeholder="Nome Completo do Paciente"
+        value={nome}
+        onChangeText={setNome}
+        style={styles.input}
       />
-      <TextInput 
-        placeholder="Idade do Paciente" 
-        value={idade} 
-        onChangeText={setIdade} 
-        keyboardType="numeric" 
-        style={{ borderWidth: 1, padding: 8, marginVertical: 5 }}
+      <TextInput
+        placeholder="Idade do Paciente"
+        value={idade}
+        onChangeText={setIdade}
+        keyboardType="numeric"
+        style={styles.input}
       />
-      <TextInput 
-        placeholder="Histórico Médico" 
-        value={historico} 
-        onChangeText={setHistorico} 
-        style={{ borderWidth: 1, padding: 8, marginVertical: 5 }}
+      <TextInput
+        placeholder="Histórico Médico"
+        value={historico}
+        onChangeText={setHistorico}
+        style={styles.input}
       />
 
-      {/* Botão de Enviar */}
-      <Button title="Registrar Coleta" onPress={handleSubmit} color="#4CAF50" />
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Registrar Coleta</Text>
+      </TouchableOpacity>
 
-      {/* Exibir mensagem de erro, se houver */}
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#ffffff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  input: {
+    height: 48,
+    borderWidth: 1,
+    borderColor: '#cccccc',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    fontSize: 16,
+    backgroundColor: '#f9f9f9',
+  },
+  button: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   errorText: {
     color: 'red',
+    fontSize: 14,
     marginTop: 10,
+    textAlign: 'center',
   },
 });
