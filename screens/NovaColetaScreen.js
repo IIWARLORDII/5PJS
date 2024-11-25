@@ -1,83 +1,80 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Image, Alert, StyleSheet } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+// import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import { realtimeDb } from '../firebaseConfig';
 import { ref, set, get } from 'firebase/database';
-import { CLOUDINARY_URL, CLOUDINARY_UPLOAD_PRESET } from '@env';
+// import { CLOUDINARY_URL, CLOUDINARY_UPLOAD_PRESET } from '@env';
 
 export default function NovaColetaScreen({ navigation }) {
-  const [image, setImage] = useState(null);
+  // const [image, setImage] = useState(null);
+  const [imageLink, setImageLink] = useState('');
   const [detalhes, setDetalhes] = useState('');
   const [tipo, setTipo] = useState('');
   const [nome, setNome] = useState('');
   const [idade, setIdade] = useState('');
   const [historico, setHistorico] = useState('');
-  const [uploading, setUploading] = useState(false);
+  // const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
   // Função para escolher imagem
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  // const pickImage = async () => {
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //     quality: 1,
+  //   });
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
+  //   if (!result.canceled) {
+  //     setImage(result.assets[0].uri);
+  //   }
+  // };
 
   // Função para fazer upload da imagem para o Cloudinary
-  const uploadImageToCloudinary = async (imageUri) => {
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', {
-        uri: imageUri,
-        type: 'image/jpeg',
-        name: 'upload.jpg',
-      });
-      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  // const uploadImageToCloudinary = async (imageUri) => {
+  //   setUploading(true);
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append('file', {
+  //       uri: imageUri,
+  //       type: 'image/jpeg',
+  //       name: 'upload.jpg',
+  //     });
+  //     formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
-      console.log("Dados enviados para o Cloudinary:", formData);
+  //     console.log("Dados enviados para o Cloudinary:", formData);
 
-      const response = await axios.post(CLOUDINARY_URL, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+  //     const response = await axios.post(CLOUDINARY_URL, formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     });
 
-      console.log("Resposta do Cloudinary:", response.data);
+  //     console.log("Resposta do Cloudinary:", response.data);
 
-      if (response.status === 200) {
-        return response.data.secure_url;
-      } else {
-        console.error("Erro ao fazer upload da imagem para o Cloudinary:", response.data);
-        throw new Error("Erro ao fazer upload da imagem para o Cloudinary");
-      }
-    } catch (error) {
-      console.error("Erro ao fazer upload da imagem para o Cloudinary:", error);
-      throw error;
-    } finally {
-      setUploading(false);
-    }
-  };
+  //     if (response.status === 200) {
+  //       return response.data.secure_url;
+  //     } else {
+  //       console.error("Erro ao fazer upload da imagem para o Cloudinary:", response.data);
+  //       throw new Error("Erro ao fazer upload da imagem para o Cloudinary");
+  //     }
+  //   } catch (error) {
+  //     console.error("Erro ao fazer upload da imagem para o Cloudinary:", error);
+  //     throw error;
+  //   } finally {
+  //     setUploading(false);
+  //   }
+  // };
 
   // Função para salvar dados e imagem no Firebase
   const handleSubmit = async () => {
-    if (!image || !detalhes || !tipo || !nome || !idade) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos e escolha uma imagem.");
+    if (!imageLink || !detalhes || !tipo || !nome || !idade) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos e forneça um link de imagem.");
       return;
     }
 
     try {
-      // Upload da imagem para o Cloudinary
-      const photoURL = await uploadImageToCloudinary(image);
-      console.log("URL da imagem:", photoURL);
-
       // Gerar ID incremental para a nova coleta
       const coletasRef = ref(realtimeDb, 'coletas');
       const coletasSnapshot = await get(coletasRef);
@@ -87,18 +84,22 @@ export default function NovaColetaScreen({ navigation }) {
       // Salvar coleta no Realtime Database
       await set(ref(realtimeDb, `coletas/${coletaID}`), {
         n: coletaID,
+        coleta: coletaID, // Adicionar a chave "coleta" como string
         nome,
         idade,
         historico,
         detalhes,
         tipoAnalise: tipo,
-        foto: photoURL,
+        foto: imageLink,
         diagnostico: "Negativo",
         analisado: 0
       });
 
-      Alert.alert("Sucesso", "Coleta registrada com sucesso!");
-      navigation.navigate('Coletas');
+      // Redirecionar para a tela de coletas
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Coletas' }],
+      });
     } catch (error) {
       console.error("Erro ao salvar coleta:", error);
       setError(`Erro ao registrar a coleta: ${error.message}`);
@@ -109,10 +110,13 @@ export default function NovaColetaScreen({ navigation }) {
     <View style={{ padding: 20 }}>
       <Text style={{ fontSize: 18, marginBottom: 10 }}>Nova Coleta</Text>
       
-      {/* Botão para escolher imagem */}
-      <Button title="Escolher Imagem" onPress={pickImage} />
-      {uploading && <Text>Fazendo upload...</Text>}
-      {image && <Image source={{ uri: image }} style={{ width: 200, height: 200, marginVertical: 10 }} />}
+      {/* Campo para link da imagem */}
+      <TextInput 
+        placeholder="Link da Imagem" 
+        value={imageLink} 
+        onChangeText={setImageLink} 
+        style={{ borderWidth: 1, padding: 8, marginVertical: 5 }}
+      />
       
       {/* Campos de entrada */}
       <TextInput 
