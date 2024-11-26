@@ -101,21 +101,52 @@ export default function ColetasScreen() {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
     padding: 20,
-    borderRadius: 10,
+    backgroundColor: '#ffffff',
   },
-  modalTitle: {
-    fontSize: 20,
+  title: {
+    fontSize: 24,
     fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 16,
+  },
+  newCollectButton: {
+    backgroundColor: '#007bff',
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  newCollectButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  collectItem: {
+    backgroundColor: '#f9f9f9',
+    padding: 16,
+    borderRadius: 8,
     marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  collectTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 8,
+  },
+  collectDetails: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 8,
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 8,
+    marginTop: 8,
   },
 });

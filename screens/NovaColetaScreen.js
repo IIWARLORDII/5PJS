@@ -161,8 +161,44 @@ export default function NovaColetaScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#ffffff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  input: {
+    height: 48,
+    borderWidth: 1,
+    borderColor: '#cccccc',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    fontSize: 16,
+    backgroundColor: '#f9f9f9',
+  },
+  button: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   errorText: {
     color: 'red',
+    fontSize: 14,
     marginTop: 10,
+    textAlign: 'center',
   },
 });

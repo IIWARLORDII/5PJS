@@ -118,31 +118,38 @@ export default function AnaliseScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
     padding: 20,
-    borderRadius: 10,
+    backgroundColor: '#ffffff',
   },
-  modalTitle: {
-    fontSize: 20,
+  title: {
+    fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#333',
+  },
+  card: {
+    marginVertical: 10,
+    padding: 15,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#ddd',
+    backgroundColor: '#f9f9f9',
+  },
+  image: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
     marginBottom: 10,
   },
-  radioContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 10,
+  classificationText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
   },
-  radio: {
-    padding: 10,
-    borderWidth: 1,
-    borderRadius: 5,
+  detailsText: {
+    fontSize: 14,
+    color: '#555',
   },
 });

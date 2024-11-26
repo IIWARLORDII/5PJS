@@ -75,6 +75,30 @@ export default function RelatorioScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#ffffff',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  button: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -82,14 +106,40 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 8,
+    width: '80%',
+    alignItems: 'center',
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    color: '#333333',
+    marginBottom: 12,
+  },
+  modalText: {
+    fontSize: 16,
+    color: '#555555',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  closeButton: {
+    backgroundColor: '#d9534f',
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    width: '100%',
+  },
+  closeButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  noDataText: {
+    fontSize: 16,
+    color: '#888888',
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
