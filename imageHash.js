@@ -1,6 +1,6 @@
 // imageHash.js
 import ImageEditor from "@react-native-community/image-editor"; // Ajuda a redimensionar a imagem
-import * as ImageBase64 from 'react-native-image-base64';
+import axios from 'axios'; // Import axios for fetching images
 
 // Função para redimensionar a imagem para 8x8 pixels (para simplificar o pHash)
 async function resizeImage(uri) {
@@ -13,10 +13,21 @@ async function resizeImage(uri) {
   return await ImageEditor.cropImage(uri, cropData);
 }
 
+// Função para converter array buffer para base64
+function arrayBufferToBase64(buffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
 // Converte a imagem em escala de cinza e gera o hash
 async function generateImageHash(uri) {
-  const resizedImageUri = await resizeImage(uri);
-  const base64Image = await ImageBase64.getBase64String(resizedImageUri);
+  const response = await axios.get(uri, { responseType: 'arraybuffer' });
+  const base64Image = arrayBufferToBase64(response.data); // Convert the binary response to base64
 
   // Converte a string base64 para um array de valores de pixels
   const pixels = await convertBase64ToGrayscaleArray(base64Image);
@@ -31,14 +42,22 @@ async function generateImageHash(uri) {
 
 // Converte a string base64 da imagem para uma matriz de pixels em escala de cinza
 async function convertBase64ToGrayscaleArray(base64) {
-  // Decodifica a imagem base64 e converte para array de pixels
-  // Em um ambiente Node.js completo, podemos usar bibliotecas como "sharp" para essa conversão,
-  // mas em React Native, estamos limitados ao uso de bibliotecas compatíveis.
+  const binaryString = atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
 
-  // Implementação de conversão base64 -> pixels (depende do ambiente e métodos disponíveis)
-  // Aqui vamos supor que os dados já estejam prontos em escala de cinza
-  // Essa implementação específica é um placeholder e exigirá mais ajustes em produção.
-  return new Array(64).fill(128); // Placeholder, deve ser substituído por conversão real.
+  const grayscaleArray = [];
+  for (let i = 0; i < bytes.length; i += 4) {
+    const r = bytes[i];
+    const g = bytes[i + 1];
+    const b = bytes[i + 2];
+    const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+    grayscaleArray.push(gray);
+  }
+  return grayscaleArray;
 }
 
 // Compara dois hashes e retorna uma medida de similaridade (distância de Hamming)

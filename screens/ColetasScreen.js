@@ -1,7 +1,7 @@
 // screens/ColetasScreen.js
 import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, Text, Button, FlatList, Image, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Button, FlatList, Image, Modal, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { realtimeDb } from '../firebaseConfig';
 import { ref, onValue, off } from 'firebase/database';
 import NovaColetaScreen from './NovaColetaScreen'; // Importa a tela Nova Coleta
@@ -35,8 +35,8 @@ function ColetasHome({ navigation }) {
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 24, marginBottom: 16 }}>Coletas</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Coletas</Text>
       <Button title="Fazer nova coleta" onPress={() => navigation.navigate('Nova Coleta')} />
       
       <FlatList
@@ -44,10 +44,10 @@ function ColetasHome({ navigation }) {
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handleColetaPress(item)}>
-            <View style={{ marginVertical: 10 }}>
-              <Text>Coleta: {item.coleta}</Text>
-              <Text>Detalhes: {item.detalhes}</Text>
-              <Image source={{ uri: item.foto }} style={{ width: 100, height: 100 }} />
+            <View style={styles.item}>
+              <Text style={styles.itemText}>Coleta: {item.coleta}</Text>
+              <Text style={styles.itemText}>Detalhes: {item.detalhes}</Text>
+              <Image source={{ uri: item.foto }} style={styles.itemImage} />
             </View>
           </TouchableOpacity>
         )}
@@ -64,22 +64,22 @@ function ColetasHome({ navigation }) {
             {selectedColeta && (
               <>
                 <Text style={styles.modalTitle}>Detalhes da Coleta</Text>
-                <Text>Número da coleta: {selectedColeta.coleta}</Text>
-                <Text>Nome: {selectedColeta.nome}</Text>
-                <Text>Idade: {selectedColeta.idade}</Text>
-                <Text>Histórico Médico: {selectedColeta.historico}</Text>
-                <Text>Detalhes: {selectedColeta.detalhes}</Text>
-                <Text>Tipo de Análise: {selectedColeta.tipoAnalise}</Text>
-                <Text>Diagnóstico: {selectedColeta.diagnostico}</Text>
-                <Text>Analisado: {selectedColeta.analisado ? 'Sim' : 'Não'}</Text>
-                <Image source={{ uri: selectedColeta.foto }} style={{ width: 200, height: 200 }} />
+                <Text style={styles.modalText}>Número da coleta: {selectedColeta.coleta}</Text>
+                <Text style={styles.modalText}>Nome: {selectedColeta.nome}</Text>
+                <Text style={styles.modalText}>Idade: {selectedColeta.idade}</Text>
+                <Text style={styles.modalText}>Histórico Médico: {selectedColeta.historico}</Text>
+                <Text style={styles.modalText}>Detalhes: {selectedColeta.detalhes}</Text>
+                <Text style={styles.modalText}>Tipo de Análise: {selectedColeta.tipoAnalise}</Text>
+                <Text style={styles.modalText}>Diagnóstico: {selectedColeta.diagnostico}</Text>
+                <Text style={styles.modalText}>Analisado: {selectedColeta.analisado ? 'Sim' : 'Não'}</Text>
+                <Image source={{ uri: selectedColeta.foto }} style={styles.modalImage} />
                 <Button title="Fechar" onPress={() => setModalVisible(false)} />
               </>
             )}
           </View>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -101,52 +101,51 @@ export default function ColetasScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  modalContainer: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
     padding: 20,
-    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalText: {
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+  modalImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 10,
+  },
+  container: {
+    padding: 20,
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333333',
     marginBottom: 16,
   },
-  newCollectButton: {
-    backgroundColor: '#007bff',
-    padding: 14,
-    borderRadius: 8,
+  item: {
+    marginVertical: 10,
     alignItems: 'center',
-    marginBottom: 16,
   },
-  newCollectButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
+  itemText: {
+    textAlign: 'center',
   },
-  collectItem: {
-    backgroundColor: '#f9f9f9',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  collectTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333333',
-    marginBottom: 8,
-  },
-  collectDetails: {
-    fontSize: 14,
-    color: '#666666',
-    marginBottom: 8,
-  },
-  image: {
+  itemImage: {
     width: 100,
     height: 100,
-    borderRadius: 8,
-    marginTop: 8,
+    marginTop: 5,
   },
 });

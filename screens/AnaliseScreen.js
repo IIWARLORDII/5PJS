@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, FlatList, Image, Modal, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { View, Text, Button, FlatList, Image, Modal, TouchableOpacity, StyleSheet, TextInput, ScrollView } from 'react-native';
 import { realtimeDb } from '../firebaseConfig';
 import { ref, onValue, off, update } from 'firebase/database';
 
@@ -54,17 +54,17 @@ export default function AnaliseScreen({ navigation }) {
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontSize: 24, marginBottom: 16 }}>Análises Pendentes</Text>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Análises Pendentes</Text>
       <FlatList
         data={coletas}
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handleColetaPress(item)}>
-            <View style={{ marginVertical: 10 }}>
-              <Text>Coleta: {item.coleta}</Text>
-              <Text>Detalhes: {item.detalhes}</Text>
-              <Image source={{ uri: item.foto }} style={{ width: 100, height: 100 }} />
+            <View style={styles.item}>
+              <Text style={styles.itemText}>Coleta: {item.coleta}</Text>
+              <Text style={styles.itemText}>Detalhes: {item.detalhes}</Text>
+              <Image source={{ uri: item.foto }} style={styles.itemImage} />
             </View>
           </TouchableOpacity>
         )}
@@ -81,15 +81,15 @@ export default function AnaliseScreen({ navigation }) {
             {selectedColeta && (
               <>
                 <Text style={styles.modalTitle}>Detalhes da Coleta</Text>
-                <Text>Número da coleta: {selectedColeta.coleta}</Text>
-                <Text>Nome: {selectedColeta.nome}</Text>
-                <Text>Idade: {selectedColeta.idade}</Text>
-                <Text>Histórico Médico: {selectedColeta.historico}</Text>
-                <Text>Detalhes: {selectedColeta.detalhes}</Text>
-                <Text>Tipo de Análise: {selectedColeta.tipoAnalise}</Text>
-                <Text>Diagnóstico: {selectedColeta.diagnostico}</Text>
-                <Image source={{ uri: selectedColeta.foto }} style={{ width: 300, height: 300 }} />
-                <Text>Aprovar Diagnóstico?</Text>
+                <Text style={styles.modalText}>Número da coleta: {selectedColeta.coleta}</Text>
+                <Text style={styles.modalText}>Nome: {selectedColeta.nome}</Text>
+                <Text style={styles.modalText}>Idade: {selectedColeta.idade}</Text>
+                <Text style={styles.modalText}>Histórico Médico: {selectedColeta.historico}</Text>
+                <Text style={styles.modalText}>Detalhes: {selectedColeta.detalhes}</Text>
+                <Text style={styles.modalText}>Tipo de Análise: {selectedColeta.tipoAnalise}</Text>
+                <Text style={styles.modalText}>Diagnóstico: {selectedColeta.diagnostico}</Text>
+                <Image source={{ uri: selectedColeta.foto }} style={styles.modalImage} />
+                <Text style={styles.modalText}>Aprovar Diagnóstico?</Text>
                 <View style={styles.radioContainer}>
                   <TouchableOpacity onPress={() => setAprovado(true)} style={styles.radio}>
                     <Text>Sim</Text>
@@ -113,43 +113,66 @@ export default function AnaliseScreen({ navigation }) {
           </View>
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  modalContainer: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
     padding: 20,
-    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalText: {
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+  modalImage: {
+    width: 200,
+    height: 200,
+    marginBottom: 10,
+  },
+  container: {
+    padding: 20,
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
     marginBottom: 16,
-    color: '#333',
   },
-  card: {
+  item: {
     marginVertical: 10,
-    padding: 15,
+    alignItems: 'center',
+  },
+  itemText: {
+    textAlign: 'center',
+  },
+  itemImage: {
+    width: 100,
+    height: 100,
+    marginTop: 5,
+  },
+  radioContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 10,
+  },
+  radio: {
+    padding: 10,
     borderWidth: 1,
-    borderRadius: 8,
-    borderColor: '#ddd',
-    backgroundColor: '#f9f9f9',
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    marginBottom: 10,
-  },
-  classificationText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  detailsText: {
-    fontSize: 14,
-    color: '#555',
+    borderRadius: 5,
   },
 });

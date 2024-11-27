@@ -1,73 +1,34 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
-// import * as ImagePicker from 'expo-image-picker';
+import { View, Text, TextInput, Button, Alert, StyleSheet, Image, Picker } from 'react-native';
 import axios from 'axios';
 import { realtimeDb } from '../firebaseConfig';
 import { ref, set, get } from 'firebase/database';
-// import { CLOUDINARY_URL, CLOUDINARY_UPLOAD_PRESET } from '@env';
+import { areImagesSimilar } from '../imageHash'; // Import the image comparison function
 
 export default function NovaColetaScreen({ navigation }) {
-  // const [image, setImage] = useState(null);
   const [imageLink, setImageLink] = useState('');
   const [detalhes, setDetalhes] = useState('');
-  const [tipo, setTipo] = useState('');
+  const [tipo, setTipo] = useState('Exame de Sangue a Fresco');
   const [nome, setNome] = useState('');
   const [idade, setIdade] = useState('');
   const [historico, setHistorico] = useState('');
-  // const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [imageValid, setImageValid] = useState(false);
 
-  // Função para escolher imagem
-  // const pickImage = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     allowsEditing: true,
-  //     aspect: [4, 3],
-  //     quality: 1,
-  //   });
+  const handleImageLinkChange = async (link) => {
+    setImageLink(link);
+    try {
+      const response = await axios.get(link);
+      if (response.status === 200) {
+        setImageValid(true);
+      } else {
+        setImageValid(false);
+      }
+    } catch {
+      setImageValid(false);
+    }
+  };
 
-  //   if (!result.canceled) {
-  //     setImage(result.assets[0].uri);
-  //   }
-  // };
-
-  // Função para fazer upload da imagem para o Cloudinary
-  // const uploadImageToCloudinary = async (imageUri) => {
-  //   setUploading(true);
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('file', {
-  //       uri: imageUri,
-  //       type: 'image/jpeg',
-  //       name: 'upload.jpg',
-  //     });
-  //     formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-  //     console.log("Dados enviados para o Cloudinary:", formData);
-
-  //     const response = await axios.post(CLOUDINARY_URL, formData, {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //       },
-  //     });
-
-  //     console.log("Resposta do Cloudinary:", response.data);
-
-  //     if (response.status === 200) {
-  //       return response.data.secure_url;
-  //     } else {
-  //       console.error("Erro ao fazer upload da imagem para o Cloudinary:", response.data);
-  //       throw new Error("Erro ao fazer upload da imagem para o Cloudinary");
-  //     }
-  //   } catch (error) {
-  //     console.error("Erro ao fazer upload da imagem para o Cloudinary:", error);
-  //     throw error;
-  //   } finally {
-  //     setUploading(false);
-  //   }
-  // };
-
-  // Função para salvar dados e imagem no Firebase
   const handleSubmit = async () => {
     if (!imageLink || !detalhes || !tipo || !nome || !idade) {
       Alert.alert("Erro", "Por favor, preencha todos os campos e forneça um link de imagem.");
@@ -75,6 +36,22 @@ export default function NovaColetaScreen({ navigation }) {
     }
 
     try {
+      // Verificar se a imagem é similar a alguma imagem em /positivos
+      const positivosRef = ref(realtimeDb, 'positivos');
+      const positivosSnapshot = await get(positivosRef);
+      let diagnostico = "Negativo";
+
+      if (positivosSnapshot.exists()) {
+        const positivos = positivosSnapshot.val();
+        for (const key in positivos) {
+          const similar = await areImagesSimilar(imageLink, positivos[key]);
+          if (similar) {
+            diagnostico = "Positivo";
+            break;
+          }
+        }
+      }
+
       // Gerar ID incremental para a nova coleta
       const coletasRef = ref(realtimeDb, 'coletas');
       const coletasSnapshot = await get(coletasRef);
@@ -91,7 +68,7 @@ export default function NovaColetaScreen({ navigation }) {
         detalhes,
         tipoAnalise: tipo,
         foto: imageLink,
-        diagnostico: "Negativo",
+        diagnostico,
         analisado: 0
       });
 
@@ -108,13 +85,17 @@ export default function NovaColetaScreen({ navigation }) {
 
   return (
     <View style={{ padding: 20 }}>
+      <Image
+        source={imageValid ? { uri: imageLink } : require('../assets/laboratorio.png')}
+        style={{ width: 200, height: 200, alignSelf: 'center', marginBottom: 20 }}
+      />
       <Text style={{ fontSize: 18, marginBottom: 10 }}>Nova Coleta</Text>
       
       {/* Campo para link da imagem */}
       <TextInput 
         placeholder="Link da Imagem" 
         value={imageLink} 
-        onChangeText={setImageLink} 
+        onChangeText={handleImageLinkChange} 
         style={{ borderWidth: 1, padding: 8, marginVertical: 5 }}
       />
       
@@ -125,12 +106,15 @@ export default function NovaColetaScreen({ navigation }) {
         onChangeText={setDetalhes} 
         style={{ borderWidth: 1, padding: 8, marginVertical: 5 }}
       />
-      <TextInput 
-        placeholder="Tipo de Análise (Ex: Gota Espessa)" 
-        value={tipo} 
-        onChangeText={setTipo} 
+      <Picker
+        selectedValue={tipo}
+        onValueChange={(itemValue) => setTipo(itemValue)}
         style={{ borderWidth: 1, padding: 8, marginVertical: 5 }}
-      />
+      >
+        <Picker.Item label="Exame de Sangue a Fresco" value="Exame de Sangue a Fresco" />
+        <Picker.Item label="Distensão Fina" value="Distensão Fina" />
+        <Picker.Item label="Gota Espessa" value="Gota Espessa" />
+      </Picker>
       <TextInput 
         placeholder="Nome Completo do Paciente" 
         value={nome} 
@@ -161,44 +145,8 @@ export default function NovaColetaScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#ffffff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333333',
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-  input: {
-    height: 48,
-    borderWidth: 1,
-    borderColor: '#cccccc',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    marginBottom: 12,
-    fontSize: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  button: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
   errorText: {
     color: 'red',
-    fontSize: 14,
     marginTop: 10,
-    textAlign: 'center',
   },
 });
