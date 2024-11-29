@@ -101,51 +101,91 @@ export default function ColetasScreen() {
 }
 
 const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  modalText: {
-    textAlign: 'center',
-    marginBottom: 5,
-  },
-  modalImage: {
-    width: 200,
-    height: 200,
-    marginBottom: 10,
-  },
   container: {
+    flex: 1,
+    backgroundColor: '#F9FAFB', // Fundo claro
     padding: 20,
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#374151', // Cinza escuro
     marginBottom: 16,
   },
   item: {
+    backgroundColor: '#FFFFFF', // Fundo branco
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2, // Sombra no Android
     marginVertical: 10,
+    width: '90%',
+    padding: 16,
     alignItems: 'center',
   },
   itemText: {
-    textAlign: 'center',
+    fontSize: 14,
+    color: '#374151', // Cinza escuro
+    marginBottom: 8,
   },
   itemImage: {
     width: 100,
     height: 100,
-    marginTop: 5,
+    marginTop: 8,
+    borderRadius: 8,
+    borderColor: '#E5E7EB', // Borda cinza claro
+    borderWidth: 1,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fundo translúcido
+  },
+  modalContent: {
+    width: '90%',
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 4,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111827', // Preto suave
+    marginBottom: 12,
+  },
+  modalText: {
+    fontSize: 14,
+    color: '#4B5563', // Cinza médio
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  modalImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 8,
+    marginVertical: 12,
+  },
+  button: {
+    backgroundColor: '#10B981', // Verde primário
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    marginVertical: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

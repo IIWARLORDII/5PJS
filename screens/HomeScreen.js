@@ -28,9 +28,79 @@ export default function HomeScreen({ navigation, onLogout }) {
 }
 
 const styles = StyleSheet.create({
-  footerText: {
-    color: '#808080',
+  container: {
+    flex: 1,
+    backgroundColor: '#F9FAFB', // Fundo claro
+  },
+  content: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#374151', // Cinza escuro
+    marginBottom: 16,
     textAlign: 'center',
-    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#374151',
+    marginTop: 24,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  menuContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 20,
+  },
+  menuButton: {
+    backgroundColor: '#000000', // Verde
+    padding: 16,
+    marginHorizontal: 5,
+    borderRadius: 8,
+    alignItems: 'center',
+    flex: 1,
+  },
+  menuButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  filterButton: {
+    backgroundColor: '#E5E7EB', // Cinza claro
+    padding: 16,
+    borderRadius: 8,
+    width: '100%',
+    marginVertical: 8,
+    alignItems: 'center',
+  },
+  filterButtonText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#6B7280', // Cinza médio
+  },
+  logoutButton: {
+    backgroundColor: '#EF4444', // Vermelho
+    padding: 16,
+    borderRadius: 8,
+    width: '100%',
+    marginTop: 24,
+    alignItems: 'center',
+  },
+  logoutButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  footerText: {
+    fontSize: 14,
+    color: '#9CA3AF', // Cinza claro
+    textAlign: 'center',
+    marginVertical: 10,
   },
 });
+

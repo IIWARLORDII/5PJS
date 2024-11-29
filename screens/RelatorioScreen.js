@@ -76,6 +76,44 @@ export default function RelatorioScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    backgroundColor: '#F9FAFB', // Fundo claro
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#374151', // Cinza escuro
+    marginBottom: 16,
+  },
+  item: {
+    backgroundColor: '#FFFFFF', // Fundo branco
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2, // Sombra no Android
+    marginVertical: 10,
+    width: '90%',
+    padding: 16,
+    alignItems: 'center',
+  },
+  itemText: {
+    textAlign: 'center',
+    color: '#374151',
+    fontSize: 14,
+    marginVertical: 4,
+  },
+  itemImage: {
+    width: 100,
+    height: 100,
+    marginTop: 8,
+    borderRadius: 8,
+    borderColor: '#E5E7EB', // Borda cinza claro
+    borderWidth: 1,
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -83,44 +121,82 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
+    width: '90%',
+    backgroundColor: '#FFFFFF',
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 4,
     alignItems: 'center',
   },
   modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 12,
   },
   modalText: {
-    textAlign: 'center',
-    marginBottom: 5,
+    fontSize: 14,
+    color: '#4B5563', // Cinza médio
+    marginBottom: 8,
   },
   modalImage: {
-    width: 200,
-    height: 200,
-    marginBottom: 10,
+    width: 150,
+    height: 150,
+    marginVertical: 12,
+    borderRadius: 8,
   },
-  container: {
-    padding: 20,
+  radioContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 12,
+    width: '80%',
+  },
+  radio: {
+    flex: 1,
+    marginHorizontal: 8,
+    paddingVertical: 10,
+    alignItems: 'center',
+    backgroundColor: '#E5E7EB', // Fundo cinza claro
+    borderRadius: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB', // Borda cinza clara
+    borderRadius: 8,
+    padding: 10,
+    fontSize: 14,
+    color: '#374151',
+    width: '100%',
+    marginVertical: 8,
+  },
+  buttonPrimary: {
+    backgroundColor: '#10B981', // Verde primário
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    marginVertical: 8,
     alignItems: 'center',
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 16,
+  buttonPrimaryText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
   },
-  item: {
-    marginVertical: 10,
+  buttonSecondary: {
+    backgroundColor: '#F3F4F6', // Fundo cinza claro
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    marginVertical: 8,
     alignItems: 'center',
   },
-  itemText: {
-    textAlign: 'center',
-  },
-  itemImage: {
-    width: 100,
-    height: 100,
-    marginTop: 5,
+  buttonSecondaryText: {
+    color: '#374151',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

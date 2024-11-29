@@ -1,6 +1,5 @@
-// screens/LoginScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
 export default function LoginScreen({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -11,22 +10,56 @@ export default function LoginScreen({ onLogin }) {
   };
 
   return (
-    <View style={{ padding: 16 }}>
-      <Text style={{ fontSize: 24, marginBottom: 16 }}>Faça Login</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Faça Login</Text>
       <TextInput 
         placeholder="Nome de usuário" 
         value={username} 
         onChangeText={setUsername} 
-        style={{ marginBottom: 16, padding: 8, borderWidth: 1 }}
+        style={styles.input}
       />
       <TextInput 
         placeholder="Senha" 
         secureTextEntry 
         value={password} 
         onChangeText={setPassword} 
-        style={{ marginBottom: 16, padding: 8, borderWidth: 1 }}
+        style={styles.input}
       />
-      <Button title="Login" onPress={handleLogin} />
+      <View style={styles.loginButton}>
+        <Button title="Login" onPress={handleLogin} color="#000" />
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#F9FAFB', // Cor de fundo clara
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#000000', // Cinza escuro
+    marginBottom: 40,
+    textAlign: 'center',
+  },
+  input: {
+    height: 50,
+    borderColor: '#D1D5DB', // Cor da borda (cinza claro)
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingLeft: 16,
+    fontSize: 16,
+    marginBottom: 20,
+    backgroundColor: '#FFFFFF',
+  },
+  loginButton: {
+    backgroundColor: '#000000', // Verde
+    paddingVertical: 16,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+});
