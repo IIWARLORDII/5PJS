@@ -8,8 +8,12 @@ import HomeScreen from './screens/HomeScreen';
 import ColetasScreen from './screens/ColetasScreen';
 import AnaliseScreen from './screens/AnaliseScreen';
 import RelatorioScreen from './screens/RelatorioScreen';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import firebaseConfig from './firebaseConfig';
 
 const Tab = createBottomTabNavigator();
+initializeApp(firebaseConfig);
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,13 +29,13 @@ export default function App() {
               let iconName;
 
               if (route.name === 'Home') {
-                iconName = require('./assets/home.png');
+                iconName = require('./assets/icons/home.png');
               } else if (route.name === 'Coletas') {
-                iconName = require('./assets/coleta.png');
+                iconName = require('./assets/icons/coleta.png');
               } else if (route.name === 'Análises') {
-                iconName = require('./assets/analise.png');
+                iconName = require('./assets/icons/analise.png');
               } else if (route.name === 'Relatórios') {
-                iconName = require('./assets/relatorio.png');
+                iconName = require('./assets/icons/relatorio.png');
               }
 
               // You can return any component that you like here!

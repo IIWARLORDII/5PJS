@@ -1,11 +1,17 @@
-# Sample Snack app
+Para instalar ChagasApp:
 
-Open the `App.js` file to start writing some code. You can preview the changes directly on your phone or tablet by scanning the **QR code** or use the iOS or Android emulators. When you're done, click **Save** and share the link!
+- Baixe o app;
+- Abra o terminal (Bash, CMD, Powershel,...);
+- No terminal vá para pasta do app (cd "local da pasta do app");
+- Execute " npm install ";
+- Execute  " npm start "; 
+- Selecione o modo para rodar o app (a = Android, w = Web);
 
-When you're ready to see everything that Expo provides (or if you want to use your own editor) you can **Download** your project and use it with [expo cli](https://docs.expo.dev/get-started/installation/#expo-cli)).
-
-All projects created in Snack are publicly available, so you can easily share the link to this project via link, or embed it on a web page with the `<>` button.
-
-If you're having problems, you can tweet to us [@expo](https://twitter.com/expo) or ask in our [forums](https://forums.expo.dev/c/expo-dev-tools/61) or [Discord](https://chat.expo.dev/).
-
-Snack is Open Source. You can find the code on the [GitHub repo](https://github.com/expo/snack).
+Possíveis soluções caso tenha problemas na instalação e execução (vá para a pasta do app no terminal):
+- " rm -rf node_modules package-lock.json " para apagar pastas e arquivos para nova instalação de dependências;
+- Para atualizar dependências:
+    npm install -g npm-check-updates
+    npx npm-check-updates
+    npx npm-check-updates -u
+- " npm install --legacy-peer-deps " ou " npm install --force "caso não esta instalando dependências;
+- " npx expo start " caso esteja iniciando o app;

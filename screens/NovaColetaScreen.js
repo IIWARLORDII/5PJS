@@ -86,7 +86,7 @@ export default function NovaColetaScreen({ navigation }) {
   return (
     <View style={{ padding: 20 }}>
       <Image
-        source={imageValid ? { uri: imageLink } : require('../assets/laboratorio.png')}
+        source={imageValid ? { uri: imageLink } : require('../assets/icons/laboratorio.png')}
         style={{ width: 200, height: 200, alignSelf: 'center', marginBottom: 20 }}
       />
       <Text style={{ fontSize: 18, marginBottom: 10 }}>Nova Coleta</Text>

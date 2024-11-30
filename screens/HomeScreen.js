@@ -1,7 +1,19 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
+import { getAuth, signOut } from 'firebase/auth';
 
 export default function HomeScreen({ navigation, onLogout }) {
+  const handleLogout = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        onLogout();
+      })
+      .catch(error => {
+        console.error('Erro ao desconectar:', error);
+      });
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ padding: 20 }}>
@@ -19,7 +31,7 @@ export default function HomeScreen({ navigation, onLogout }) {
         <Button title="Gota Espessa" onPress={() => {}} color="#808080" />
         <Button title="Técnicas de Coloração" onPress={() => {}} color="#808080" />
 
-        <Button title="Desconectar" onPress={onLogout} color="#d9534f" />
+        <Button title="Desconectar" onPress={handleLogout} color="#d9534f" />
       </ScrollView>
 
       <Text style={styles.footerText}>* Filtros de coleta ainda não funcionais nesta versão.</Text>
